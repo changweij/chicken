@@ -51,7 +51,7 @@ float window_x = 1200;
 float window_y = 640;
 
 float default_infinity_time = 10000.0; 
-const int EnemyCategories = 2;
+const int EnemyCategories = 4;
 
 struct Chicken_Property{
     int max_hp;
@@ -80,9 +80,85 @@ struct Enemy_Property{
 	Enemy_Property(int dmg, int lasting_time, float v, float r): dmg(dmg), lasting_time(lasting_time), v(v), r(r){}
 };
 
-Enemy_Property E_prop[EnemyCategories] = {Enemy_Property(2, 50000, 1.0, 30.0), Enemy_Property(2, 50000, 0, 30.0)}; 
+Enemy_Property E_prop[EnemyCategories] = {Enemy_Property(2, 20000, 1.0, 30.0), Enemy_Property(2, 20000, 0, 30.0)
+, Enemy_Property(1, 10000, 4.0, 20.0), Enemy_Property(5, 20000, 0, 50.0)}; 
 
+//=========================================these are fundamentals=============================================
+bool SDL_init = init();
+bool gameRunning = true;
+SDL_Window* window;
+SDL_Renderer* renderer;
 
+TTF_Font* font32 = TTF_OpenFont("font/font.ttf", 32);
+TTF_Font* font48 = TTF_OpenFont("font/font.ttf", 48);
+TTF_Font* font24 = TTF_OpenFont("font/font.ttf", 24);
+
+SDL_Color white = { 255, 255, 255 };
+SDL_Color black = { 0, 0, 0 };
+
+LTexture G_Chicken[2], E_Chicken[2], B_Chicken[2];
+LTexture G_ChickenR[2], E_ChickenR[2], B_ChickenR[2];
+LTexture Enemy[EnemyCategories];
+LTexture ScoreBoard;
+LTexture EggNumber;
+LTexture Background;
+GoldChicken player = GoldChicken(1, GoldC.max_hp, GoldC.gold_cost, Vector2D(border_x / 2, border_y / 2), GoldC.r);
+//========================================initializing part ended==================================================
+void setTexture(){
+	Background.loadFromFile("img/GrassBackground.jpg", renderer);
+	G_Chicken[0].loadFromFile("img/GoldC.png", renderer);
+	G_Chicken[1].loadFromFile("img/GoldC2.png", renderer);
+	E_Chicken[0].loadFromFile("img/ElectricityC.png", renderer);
+	E_Chicken[1].loadFromFile("img/ElectricityC2.png", renderer);
+	B_Chicken[0].loadFromFile("img/BurningC.png", renderer);
+	B_Chicken[1].loadFromFile("img/BurningC2.png", renderer);
+	G_ChickenR[0].loadFromFile("img/GoldCR.png", renderer);
+	G_ChickenR[1].loadFromFile("img/GoldC2R.png", renderer);
+	E_ChickenR[0].loadFromFile("img/ElectricityCR.png", renderer);
+	E_ChickenR[1].loadFromFile("img/ElectricityC2R.png", renderer);
+	B_ChickenR[0].loadFromFile("img/BurningCR.png", renderer);
+	B_ChickenR[1].loadFromFile("img/BurningC2R.png", renderer);
+	Enemy[0].loadFromFile("img/Calculus.png", renderer);
+	Enemy[1].loadFromFile("img/KFire.png", renderer);
+	Enemy[2].loadFromFile("img/Bujo.png", renderer);
+	Enemy[3].loadFromFile("img/Deadline.png", renderer);
+	ScoreBoard.loadFromFile("img/ScoreBoard.png", renderer);
+	//EggNumber.loadFromRenderedText("0", black, renderer, font32);
+}
+//=======================================Texture Setting part ended====================================================
+Node *head = new Node, *tail = new Node;
+bool turn = false;
+
+void move(){
+	//move chicken
+	player.Moving_Chicken();
+	//move Enemy 
+	Node *now = head->next, *temp;
+	bool check;
+	while(now != tail){
+		now->val.move();
+		check = false;
+		if(now->val.get_id() == 3) check = isCollided2(player, now->val, Enemy[3].getWidth() * (E_prop[3].r / Enemy[3].getHeight()));
+		else check = isCollided(player, now->val);
+		if(check){
+			if(!player.adjust_hp(-now->val.get_dmg())){
+				gameRunning = false;
+				return;
+			}
+			temp = now->prev;
+			del(now);
+			now = temp;
+		}
+		else if(now->val.isDead(SDL_GetTicks())){
+			temp = now->prev;
+			del(now);
+			now = temp;
+		}
+		now = now->next;
+	}
+}
+
+//===========================================moving part ended====================================================
 int dir_x[9] =       {0,  0, -1, -1,  1,  1,  0,  1, -1};
 int dir_y[9] =       {0, -1,  0, -1,  0, -1,  1,  1,  1};
 int id[9] = {};
@@ -91,7 +167,6 @@ bool isalive[9] =    {1,  0,  0,  0,  0,  0,  0,  0,  0};
 Chicken Chickens[9];
 
 bool Summon_Chicken(int _kind){
-    
     int index = 1;
     if(Gold < chicken_cost[_kind]) return false;
     for(int i = 1; i <= 8; i++){
@@ -122,77 +197,9 @@ bool Summon_Chicken(int _kind){
     }
     return true;
 }
+//========================================store part ended===========================================================
 
 
-
-
-
-//=========================================these are fundamentals=============================================
-bool SDL_init = init();
-bool gameRunning = true;
-SDL_Window* window;
-SDL_Renderer* renderer;
-
-TTF_Font* font32 = TTF_OpenFont("font/font.ttf", 32);
-TTF_Font* font48 = TTF_OpenFont("font/font.ttf", 48);
-TTF_Font* font24 = TTF_OpenFont("font/font.ttf", 24);
-
-SDL_Color white = { 255, 255, 255 };
-SDL_Color black = { 0, 0, 0 };
-
-LTexture G_Chicken[2], E_Chicken[2], B_Chicken[2];
-LTexture Enemy[EnemyCategories];
-LTexture ScoreBoard;
-LTexture EggNumber;
-LTexture Background;
-GoldChicken player = GoldChicken(1, GoldC.max_hp, GoldC.gold_cost, Vector2D(border_x / 2, border_y / 2), GoldC.r);
-//========================================initializing part ended==================================================
-void setTexture(){
-	Background.loadFromFile("img/GrassBackground.jpg", renderer);
-	G_Chicken[0].loadFromFile("img/GoldC.png", renderer);
-	G_Chicken[1].loadFromFile("img/GoldC2.png", renderer);
-	E_Chicken[0].loadFromFile("img/ElectricityC.png", renderer);
-	E_Chicken[1].loadFromFile("img/ElectricityC2.png", renderer);
-	B_Chicken[0].loadFromFile("img/BurningC.png", renderer);
-	B_Chicken[1].loadFromFile("img/BurningC2.png", renderer);
-	Enemy[0].loadFromFile("img/Calculus.png", renderer);
-	Enemy[1].loadFromFile("img/KFire.png", renderer);
-	ScoreBoard.loadFromFile("img/ScoreBoard.png", renderer);
-	//EggNumber.loadFromRenderedText("0", black, renderer, font32);
-}
-//=======================================Texture Setting part ended====================================================
-Node *head = new Node, *tail = new Node;
-
-void move(){
-	//move chicken
-	player.Moving_Chicken();
-
-    for(int i = 1; i <= 8; i++){
-        if(isalive[i]) Chickens[i].Moving_Chicken();
-    }
-	//move Enemy 
-	Node *now = head->next, *temp;
-	while(now != tail){
-		now->val.move();
-		if(isCollided(player, now->val)){
-			if(!player.adjust_hp(-now->val.get_dmg())){
-				gameRunning = false;
-				return;
-			}
-			temp = now->prev;
-			del(now);
-			now = temp;
-		}
-		else if(now->val.isDead(SDL_GetTicks())){
-			temp = now->prev;
-			del(now);
-			now = temp;
-		}
-		now = now->next;
-	}
-}
-
-//===========================================moving part ended====================================================
 const int generateSpeed = 2;
 
 void generateEnemy(){
@@ -213,11 +220,13 @@ void generateEnemy(){
 		if(E_prop[kind].v != 0) v = get_mag_of(E_prop[kind].v);
 		if(kind == 0) nd = new Node(Calculus(pos, E_prop[kind].dmg, SDL_GetTicks(), E_prop[kind].lasting_time, v, E_prop[kind].r, 0));
 		else if(kind == 1) nd = new Node(Fire(pos, E_prop[kind].dmg, SDL_GetTicks(), E_prop[kind].lasting_time, v, E_prop[kind].r, 1));
+		else if(kind == 2) nd = new Node(Bujo(pos, E_prop[kind].dmg, SDL_GetTicks(), E_prop[kind].lasting_time, v, E_prop[kind].r, 2));
+		else if(kind == 3) nd = new Node(Deadline(pos, E_prop[kind].dmg, SDL_GetTicks(), E_prop[kind].lasting_time, v, E_prop[kind].r, 3));
 		insert(tail, nd);
 	}
 }
 
-//==============================================Action part ended==================================================
+//=========================================Enemy generating part ended=============================================
 int walk;
 
 void render_all(){
@@ -235,12 +244,11 @@ void render_all(){
 		now = now->next;
 	}
     render_pos = player.get_pos();
-    
-
     walk++;
     if(walk == 80) walk = 0;
-    G_Chicken[walk / 40].render(render_pos.x -  GoldC.r, render_pos.y - GoldC.r, GoldC.r * 2, GoldC.r * 2, renderer);
-    ScoreBoard.render(950, 0, 250, 80, renderer);
+    if(!turn) G_Chicken[walk / 40].render(render_pos.x -  GoldC.r, render_pos.y - GoldC.r, GoldC.r * 2, GoldC.r * 2, renderer);
+    else G_ChickenR[walk / 40].render(render_pos.x -  GoldC.r, render_pos.y - GoldC.r, GoldC.r * 2, GoldC.r * 2, renderer);
+	ScoreBoard.render(950, 0, 250, 80, renderer);
     
     
     EggNumber.loadFromRenderedText(Get_Gold_String(), black, renderer, font32);
@@ -273,12 +281,14 @@ void game(){
 					}
 					else if(event.key.keysym.sym == SDLK_a || event.key.keysym.sym == SDLK_LEFT){
 						player.modify_speed(1);
+						turn = false;
 					}
 					else if(event.key.keysym.sym == SDLK_s || event.key.keysym.sym == SDLK_DOWN){
 						player.modify_speed(2);
 					}
 					else if(event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_RIGHT){
 						player.modify_speed(3);
+						turn = true;
 					}
 					else continue;
 	            default:
