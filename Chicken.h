@@ -1,16 +1,22 @@
 #pragma once
 #include "Vector2D.h"
+#include "fundamental.h"
 #define Max_Level 5
 #define Max_Radius 5
 
 extern float border_x, border_y;
 extern float default_infinity_time;
+
+
 //================================================ Base Chicken ====================================================
 class Chicken{
     protected:
         int max_hp, current_hp;
         int gold_cost;
-        static float move_speed;
+
+        static float Move_speed;
+        static int Gold;
+
         Vector2D pos;
         Vector2D speed;
         float radius;
@@ -66,7 +72,7 @@ class Burning : public Chicken{
     protected:
         //int burning_boost[Max_Level][2 * Max_Radius - 1][2 * Max_Radius - 1];
         int burn_level;      
-        int damage[Max_Level];
+        int damage[Max_Level + 1];
     public:
         //Burning();
         Burning(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r); //setup level
@@ -159,3 +165,4 @@ class InvisiblePotionChicken : public Potion{
     public:
 };
 */
+

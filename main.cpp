@@ -111,6 +111,7 @@ void generateEnemy(){
 	}
 }
 
+
 //=========================================Enemy generating part ended=============================================
 
 void render_all(){
@@ -120,15 +121,16 @@ void render_all(){
 	while(now != tail){
 		class Enemy e = now->val;
         render_pos = e.get_pos();
-		Enemy[0].render(render_pos.x - 40 / 2, render_pos.y - 40 / 2, 40, 40, renderer);
+		Enemy[0].render(render_pos.x - Cal.size_radius / 2, render_pos.y - Cal.size_radius / 2, Cal.size_radius, Cal.size_radius, renderer);
 
 		now = now->next;
 	}
     render_pos = player.get_pos();
-    G_Chicken[0].render(render_pos.x - 40 / 2, render_pos.y - 40 / 2, 40, 40, renderer);
+    G_Chicken[0].render(render_pos.x - GoldC.size_radius / 2, render_pos.y - GoldC.size_radius / 2, GoldC.size_radius, GoldC.size_radius, renderer);
 }
 
 //==============================================rendering part ended===============================================
+
 
 bool gameRunning = true;
 Uint32 ticks = SDL_GetTicks();
@@ -191,6 +193,7 @@ void game(){
 		SDL_RenderPresent(renderer);
 	}
 }
+
 
 //=========================================game running part ended=====================================================
 int main(int argc, char *argv[]){
