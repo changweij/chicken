@@ -1,5 +1,5 @@
 #include "Enemy.h"
-#include "constant.h"
+#include "cmath"
 
 Enemy::Enemy(Vector2D &v, int damage, int cur_time, int lasting_time){
 	pos = v;
@@ -18,23 +18,35 @@ int Enemy::get_dmg(){
 	return dmg;
 }
 
-Moving_Enemy::Moving_Enemy(Vector2D &v, int damage, int cur_time, int lasting_time, Vector2D &s): Enemy(v, damage, cur_time, lasting_time){
-	speed = s;	
+Moving_Enemy::Moving_Enemy(Vector2D &v, int damage, int cur_time, int lasting_time, Vector2D &s, float r): Enemy(v, damage, cur_time, lasting_time){
+	speed = s;
+	radius = r;
 }
 
 void Moving_Enemy::move(){
 	pos += speed;
+	
+	//check border
+	if(pos.x - radius < 0){
+		pos.x += (radius - pos.x) * 2; 
+	}
+	else if(pos.x + radius > border_x){
+		pos.x -= (radius - border_x + pos.x) * 2;
+	}
+	if(pos.y - radius < 0){
+		pos.y += (radius - pos.y) * 2; 
+	}
+	else if(pos.y + radius > border_y){
+		pos.y -= (radius - border_y + pos.x) * 2;
+	}
 }
 
-Fixed_Enemy::Fixed_Enemy(Vector2D &v, int damage, int cur_time, int lasting_time, int perc): Enemy(v, damage, cur_time, lasting_time){
-	percentage = perc;	
+Fixed_Enemy::Fixed_Enemy(Vector2D &v, int damage, int cur_time, int lasting_time): Enemy(v, damage, cur_time, lasting_time){
 }
 
-Calculus::Calculus(Vector2D &v, int damage, int cur_time, int lasting_time, Vector2D &s): Moving_Enemy(v, damage, cur_time, lasting_time, s){
+Calculus::Calculus(Vector2D &v, int damage, int cur_time, int lasting_time, Vector2D &s, float r): Moving_Enemy(v, damage, cur_time, lasting_time, s, r){
 }
 
-Fire::Fire(Vector2D &v, int damage, int cur_time, int lasting_time, int perc): Fixed_Enemy(v, damage, cur_time, lasting_time, perc){
+Fire::Fire(Vector2D &v, int damage, int cur_time, int lasting_time): Fixed_Enemy(v, damage, cur_time, lasting_time){
 }
-
-
 
