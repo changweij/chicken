@@ -61,7 +61,7 @@ struct Chicken_Property{
 };
 
 Chicken_Property GoldC(20, 5, 30.0);
-Chicken_Property EletricityC(10, 10, 30.0);
+Chicken_Property ElectricityC(10, 10, 30.0);
 Chicken_Property BurningC(20, 20, 30.0);
 
 int Gold = 0;
@@ -84,6 +84,50 @@ Enemy_Property E_prop[EnemyCategories] = {Enemy_Property(2, 20000, 1.0, 30.0), E
 , Enemy_Property(1, 10000, 4.0, 20.0), Enemy_Property(5, 20000, 0, 50.0)}; 
 
 //=========================================these are fundamentals=============================================
+
+
+int dir_x[9] =       {0,  0, -1, -1,  1,  1,  0,  1, -1};
+int dir_y[9] =       {0, -1,  0, -1,  0, -1,  1,  1,  1};
+int id[9] = {};
+int chicken_cost[3];
+bool isalive[9] =    {1,  0,  0,  0,  0,  0,  0,  0,  0};
+GoldChicken GoldChickens[9];
+ElectricityChicken ElectricityChickens[9];
+BurningChicken BurningChickens[9];
+
+bool Summon_Chicken(int _kind){
+    int index = 1;
+    if(Gold < chicken_cost[_kind]) return false;
+    for(int i = 1; i <= 8; i++){
+        if(isalive[i] == 0){
+            index = i;
+            isalive[i] = 1;
+            break;
+        } 
+        if(i == 8) return false; // isfull 
+    }
+    
+    Vector2D summon_pos(dir_x[index] * 60, dir_y[index] * 60);
+    summon_pos += player.get_pos();
+
+    switch(_kind){
+        case 0: //GoldChicken
+            GoldChickens[index] = GoldChicken(1, GoldC.max_hp, GoldC.gold_cost, summon_pos, GoldC.r);
+            id[index] = 0;
+            break;
+        case 1: //ElectricityChicken
+            ElectricityChickens[index] = ElectricityChicken(1, ElectricityC.max_hp, ElectricityC.gold_cost, summon_pos, ElectricityC.r);
+            id[index] = 1;
+            break;
+        case 2: //BurningChicken
+            BurningChickens[index] = BurningChicken(1, BurningC.max_hp, BurningC.gold_cost, summon_pos, BurningC.r);
+            id[index] = 2;
+            break;    
+    }
+    return true;
+}
+//========================================store part ended===========================================================
+
 bool SDL_init = init();
 bool gameRunning = true;
 SDL_Window* window;
@@ -126,25 +170,129 @@ void setTexture(){
 	//EggNumber.loadFromRenderedText("0", black, renderer, font32);
 }
 //=======================================Texture Setting part ended====================================================
+
+
 Node *head = new Node, *tail = new Node;
 bool turn = false;
 
 void move(){
 	//move chicken
 	player.Moving_Chicken();
+
+    for(int i = 1; i <= 8; i++){
+        if(isalive[i] == 1){
+            switch(id[i]){
+                case 0:
+                    GoldChickens[i].Moving_Chicken();
+                    break;
+                case 1:
+                    ElectricityChickens[i].Moving_Chicken();
+                    break;
+                case 2:
+                    BurningChickens[i].Moving_Chicken();
+                    break;
+            }
+        }
+    }
 	//move Enemy 
 	Node *now = head->next, *temp;
 	bool check;
+    int check_index, check_id;
 	while(now != tail){
 		now->val.move();
 		check = false;
-		if(now->val.get_id() == 3) check = isCollided2(player, now->val, Enemy[3].getWidth() * (E_prop[3].r / Enemy[3].getHeight()));
-		else check = isCollided(player, now->val);
+        check_index = -1; check_id = -1;
+        // Collide Chickens
+		if(now->val.get_id() == 3){
+            check = isCollided2(player, now->val, Enemy[3].getWidth() * (E_prop[3].r / Enemy[3].getHeight()));	
+            if(check) check_index = 0;
+            for(int i = 1; i <= 8; i++){
+                if(isalive[i] == 0) continue;
+                switch(id[i]){
+                    case 0:
+                        check = isCollided2(GoldChickens[i], now->val, w);	
+                        if(check && check_index != 0){
+                            check_index = i;
+                            check_id = 0;
+                        }  
+                        break; 
+                    case 1:
+                        check = isCollided2(ElectricityChickens[i], now->val, w);	
+                        if(check && check_index != 0){
+                            check_index = i;
+                            check_id = 1;
+                        }  
+                        break;
+                    case 2:
+                        check = isCollided2(BurningChickens[i], now->val, w);	
+                        if(check && check_index != 0){
+                            check_index = i; 
+                            check_id = 2;
+                            
+                        } 
+                        break;
+                }
+            }
+        } 
+        else{
+            check = isCollided(player, now->val);
+            if(check) check_index = 0;
+            for(int i = 1; i <= 8; i++){
+                switch(id[i]){
+                    case 0:
+                        check = isCollided(GoldChickens[i], now->val);
+                        if(check && check_index != 0){
+                            check_index = i;
+                            check_id = 0;
+                        } 
+                        break; 
+                    case 1:
+                        check = isCollided(ElectricityChickens[i], now->val);
+                        if(check && check_index != 0){
+                            check_index = i;
+                            check_id = 1;
+                        } 
+                        break;
+                    case 2:
+                        check = isCollided(BurningChickens[i], now->val);
+                        if(check && check_index != 0){
+                            check_index = i; 
+                            check_id = 2;
+                            
+                        } 
+                        break;
+                }
+            }
+        } 
+
 		if(check){
-			if(!player.adjust_hp(-now->val.get_dmg())){
-				gameRunning = false;
-				return;
-			}
+            if(check_index == 0){
+                if(!player.adjust_hp(-now->val.get_dmg())){
+				    gameRunning = false;
+				    return;
+			    }
+            }
+            else{
+                switch(check_id){
+                    case 0:
+                        if(!GoldChickens[check_index].adjust_hp(-now->val.get_dmg())){
+				            isalive[check_index] = 0;
+			            }
+                        break; 
+                    case 1:
+                        if(!ElectricityChickens[check_index].adjust_hp(-now->val.get_dmg())){
+				            isalive[check_index] = 0;
+			            }
+                        break;
+                    case 2:
+                        if(!BurningChickens[check_index].adjust_hp(-now->val.get_dmg())){
+				            isalive[check_index] = 0;
+			            }
+                        break;
+                }
+
+            }
+			
 			temp = now->prev;
 			del(now);
 			now = temp;
@@ -159,45 +307,6 @@ void move(){
 }
 
 //===========================================moving part ended====================================================
-int dir_x[9] =       {0,  0, -1, -1,  1,  1,  0,  1, -1};
-int dir_y[9] =       {0, -1,  0, -1,  0, -1,  1,  1,  1};
-int id[9] = {};
-int chicken_cost[3];
-bool isalive[9] =    {1,  0,  0,  0,  0,  0,  0,  0,  0};
-Chicken Chickens[9];
-
-bool Summon_Chicken(int _kind){
-    int index = 1;
-    if(Gold < chicken_cost[_kind]) return false;
-    for(int i = 1; i <= 8; i++){
-        if(isalive[i] == 0){
-            index = i;
-            isalive[i] = 1;
-            break;
-        } 
-        if(i == 8) return false; // isfull 
-    }
-    
-    Vector2D summon_pos(dir_x[index] * 60, dir_y[index] * 60);
-    summon_pos += player.get_pos();
-
-    switch(_kind){
-        case 0: //GoldChicken
-            Chickens[index] = GoldChicken(1, GoldC.max_hp, GoldC.gold_cost, summon_pos, GoldC.r);
-            id[index] = 0;
-            break;
-        case 1: //ElectricityChicken
-            Chickens[index] = ElectricityChicken(1, EletricityC.max_hp, EletricityC.gold_cost, summon_pos, EletricityC.r);
-            id[index] = 1;
-            break;
-        case 2: //BurningChicken
-            Chickens[index] = BurningChicken(1, BurningC.max_hp, BurningC.gold_cost, summon_pos, BurningC.r);
-            id[index] = 2;
-            break;    
-    }
-    return true;
-}
-//========================================store part ended===========================================================
 
 
 const int generateSpeed = 2;
@@ -243,17 +352,37 @@ void render_all(){
 		Enemy[kind].render(render_pos.x - sz, render_pos.y - sz, sz * 2, sz * 2, renderer);
 		now = now->next;
 	}
+    
+    
     render_pos = player.get_pos();
     walk++;
     if(walk == 80) walk = 0;
-    if(!turn) G_Chicken[walk / 40].render(render_pos.x -  GoldC.r, render_pos.y - GoldC.r, GoldC.r * 2, GoldC.r * 2, renderer);
-    else G_ChickenR[walk / 40].render(render_pos.x -  GoldC.r, render_pos.y - GoldC.r, GoldC.r * 2, GoldC.r * 2, renderer);
-	ScoreBoard.render(950, 0, 250, 80, renderer);
+    G_Chicken[walk / 40].render(render_pos.x -  GoldC.r, render_pos.y - GoldC.r, GoldC.r * 2, GoldC.r * 2, renderer);
+    for(int i = 1; i <= 8; i++){
+        if(isalive[i] == 1){
+            switch(id[i]){
+                case 0:
+                    render_pos = GoldChickens[i].get_pos();
+                    G_Chicken[walk / 40].render(render_pos.x -  GoldC.r, render_pos.y - GoldC.r, GoldC.r * 2, GoldC.r * 2, renderer);
+                    break;
+                case 1:
+                    render_pos = ElectricityChickens[i].get_pos();
+                    E_Chicken[walk / 40].render(render_pos.x -  ElectricityC.r, render_pos.y - ElectricityC.r, ElectricityC.r * 2, ElectricityC.r * 2, renderer);
+                    break;
+                case 2:
+                    render_pos = BurningChickens[i].get_pos();
+                    B_Chicken[walk / 40].render(render_pos.x -  BurningC.r, render_pos.y - BurningC.r, BurningC.r * 2, BurningC.r * 2, renderer);
+                    break;          
+            }
+        }
+    }
+    ScoreBoard.render(950, 0, 250, 80, renderer);
     
     
     EggNumber.loadFromRenderedText(Get_Gold_String(), black, renderer, font32);
     EggNumber.render(1070, 18, renderer);
 }
+
 
 //==============================================rendering part ended===============================================
 
@@ -264,6 +393,7 @@ void game(){
 	head->next = tail;
 	tail->prev = head;
 	int counter = 0;
+    bool buy_valid = 0;
 	while (gameRunning) {
 		Uint64 start = SDL_GetPerformanceCounter();
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -291,6 +421,20 @@ void game(){
 						turn = true;
 					}
 					else continue;
+                //TODO : Set store position
+                case SDL_MOUSEBUTTONDOWN:
+                    if(event.button.x <= ????? && event.button.x >= ????? && event.button.y <= ????? && event.button.y >= ?????){
+                        buy_valid = Summon_Chicken(0);
+                    }
+                    else if(event.button.x <= ????? && event.button.x >= ????? && event.button.y <= ????? && event.button.y >= ?????){
+                        buy_valid = Summon_Chicken(1);
+                    }
+                    else if(event.button.x <= ????? && event.button.x >= ????? && event.button.y <= ????? && event.button.y >= ?????){
+                        buy_valid = Summon_Chicken(2);
+                    }
+                    else continue;
+
+
 	            default:
 	                continue;
 	        }
