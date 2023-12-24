@@ -166,6 +166,10 @@ Node *head = new Node, *tail = new Node;
 void move(){
 	//move chicken
 	player.Moving_Chicken();
+
+    for(int i = 1; i <= 8; i++){
+        if(isalive[i]) Chickens[i].Moving_Chicken();
+    }
 	//move Enemy 
 	Node *now = head->next, *temp;
 	while(now != tail){
@@ -231,6 +235,8 @@ void render_all(){
 		now = now->next;
 	}
     render_pos = player.get_pos();
+    
+
     walk++;
     if(walk == 80) walk = 0;
     G_Chicken[walk / 40].render(render_pos.x -  GoldC.r, render_pos.y - GoldC.r, GoldC.r * 2, GoldC.r * 2, renderer);
