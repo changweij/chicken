@@ -226,9 +226,9 @@ GoldChicken::GoldChicken() : GoldProduction(0){
 */
 
 GoldChicken::GoldChicken(int _level, Vector2D _pos):
-    GoldProduction(_level, 10, 10, 5, _pos, 10);
+    GoldProduction(_level, GoldC.max_hp, GoldC.max_hp, GoldC.gold_cost, _pos, GoldC.radius)
 {
-     // max_hp/current_hp : 10     gold_cost : 5  radius = 10;
+     // max_hp/current_hp : 20     gold_cost : 5  radius = 10;
 }
 
 
@@ -236,7 +236,7 @@ GoldChicken::GoldChicken(int _level, Vector2D _pos):
 
 
 EletricityChicken::EletricityChicken(int _level, Vector2D _pos):
-    SpeedBoost(_level, 10, 10, 10, _pos, 10)
+    SpeedBoost(_level, EletricityC.max_hp, EletricityC.max_hp, EletricityC.gold_cost, _pos, EletricityC.radius)
 {
     ;
     //TODO : setup speed boost
@@ -255,7 +255,8 @@ EletricityChicken::EletricityChicken(int _level, Vector2D _pos):
 //BurningChicken
 
 BurningChicken::BurningChicken(int spd_level, int burn_level, Vector2D _pos):
-    SpeedBoost(spd_level, 20, 20, 20, _pos, 10), Burning(burn_level, 20, 20, 20, _pos, 10)
+    SpeedBoost(spd_level, BurningC.max_hp, BurningC.max_hp, BurningC.gold_cost, _pos, BurningC.radius), 
+    Burning(burn_level, BurningC.max_hp, BurningC.max_hp, BurningC.gold_cost, _pos, BurningC.radius)
 {
     //TODO : setup speed boost
 }
