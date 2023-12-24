@@ -120,12 +120,12 @@ void render_all(){
 	while(now != tail){
 		class Enemy e = now->val;
         render_pos = e.get_pos();
-		Enemy[0].render(render_pos.x - Enemy[0].getWidth() / 2, render_pos.y - Enemy[0].getHeight() / 2, renderer);
+		Enemy[0].render(render_pos.x - Enemy[0].getWidth() / 2, render_pos.y - Enemy[0].getHeight() / 2, Cal.size_radius, Cal.size_radius,renderer);
 
 		now = now->next;
 	}
     render_pos = player.get_pos();
-    G_Chicken[0].render(render_pos.x - G_Chicken[0].getWidth() / 2, render_pos.y - G_Chicken[0].getHeight() / 2, renderer);
+    G_Chicken[0].render(render_pos.x - G_Chicken[0].getWidth() / 2, render_pos.y - G_Chicken[0].getHeight() / 2, GoldC.size_radius, GoldC.size_radius ,renderer);
 }
 
 //==============================================rendering part ended===============================================
