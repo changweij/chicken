@@ -42,7 +42,7 @@ void Moving_Enemy::move(){
 		pos.y += (radius - pos.y) * 2; 
 	}
 	else if(pos.y + radius > border_y){
-		pos.y -= (radius - border_y + pos.x) * 2;
+		pos.y -= (radius - border_y + pos.y) * 2;
 	}
 }
 

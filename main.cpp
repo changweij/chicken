@@ -52,7 +52,7 @@ bool init(){
 bool SDL_init = init();
 SDL_Window* window;
 SDL_Renderer* renderer;
-float curX = border_x / 2, curY = border_y / 2;
+Vector2D cur(border_x / 2, border_y / 2);
 
 TTF_Font* font32 = TTF_OpenFont("font/consola.ttf", 32);
 TTF_Font* font48 = TTF_OpenFont("font/consola.ttf", 48);
@@ -61,7 +61,7 @@ TTF_Font* font24 = TTF_OpenFont("font/consola.ttf", 24);
 
 LTexture G_Chicken[2], E_Chicken[2], B_Chicken[2];
 LTexture Enemy[EnemyCategories];
-GoldChicken player = GoldChicken(1, Vector2D(border_x / 2, border_y / 2));
+GoldChicken player = GoldChicken(1, cur);
 //========================================initializing part ended==================================================
 void setTexture(){
 	G_Chicken[0].loadFromFile("img/GoldC.png", renderer);
@@ -88,7 +88,7 @@ void move(){
 }
 
 //===========================================moving part ended====================================================
-const int generateSpeed = 5;
+const int generateSpeed = 2;
 
 void generateEnemy(){
 	srand(time(NULL));
@@ -120,12 +120,12 @@ void render_all(){
 	while(now != tail){
 		class Enemy e = now->val;
         render_pos = e.get_pos();
-		Enemy[0].render(render_pos.x - Enemy[0].getWidth() / 2, render_pos.y - Enemy[0].getHeight() / 2, Cal.size_radius, Cal.size_radius,renderer);
+		Enemy[0].render(render_pos.x - 40 / 2, render_pos.y - 40 / 2, 40, 40, renderer);
 
 		now = now->next;
 	}
     render_pos = player.get_pos();
-    G_Chicken[0].render(render_pos.x - G_Chicken[0].getWidth() / 2, render_pos.y - G_Chicken[0].getHeight() / 2, GoldC.size_radius, GoldC.size_radius ,renderer);
+    G_Chicken[0].render(render_pos.x - 40 / 2, render_pos.y - 40 / 2, 40, 40, renderer);
 }
 
 //==============================================rendering part ended===============================================
@@ -172,6 +172,7 @@ void game(){
 	                continue;
 	        }
 	    }
+	    if(!gameRunning) break;
 		// move all items
 		move();
 		// Do rendering loop

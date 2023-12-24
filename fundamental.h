@@ -12,21 +12,20 @@ struct Chicken_Property{
     int max_hp;
     int gold_cost;
     float radius;
-    float size_radius;
-    Chicken_Property(int hp, int cost, float r, float size): max_hp(hp), gold_cost(cost), radius(r), size_radius(size){}
+    Chicken_Property(int hp, int cost, float r): max_hp(hp), gold_cost(cost), radius(r){}
 };
 
-Chicken_Property GoldC(20, 5, 10.0, 100);
-Chicken_Property EletricityC(10, 10, 10.0, 100);
-Chicken_Property BurningC(20, 20, 10.0, 100);
+Chicken_Property GoldC(20, 5, 10.0);
+Chicken_Property EletricityC(10, 10, 10.0);
+Chicken_Property BurningC(20, 20, 10.0);
 
 struct Enemy_Property{
 	int dmg, lasting_time;
 	float v;
 	float r;
-    float size_radius;
-	Enemy_Property(int dmg, int lasting_time, float v, float r, float size): dmg(dmg), lasting_time(lasting_time), v(v), r(r), size_radius(size){}
+	Enemy_Property(int dmg, int lasting_time, float v, float r): dmg(dmg), lasting_time(lasting_time), v(v), r(r){}
 };
 
-Enemy_Property Cal(2, 10, 1.0, 10.0, 100);
+Enemy_Property Cal(2, 10, 1.0, 10.0);
+
 

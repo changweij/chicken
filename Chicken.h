@@ -1,18 +1,16 @@
+#pragma once
 #include "Vector2D.h"
 #define Max_Level 5
 #define Max_Radius 5
 
-
-
+extern float border_x, border_y;
+extern float default_infinity_time;
 //================================================ Base Chicken ====================================================
 class Chicken{
     protected:
         int max_hp, current_hp;
         int gold_cost;
-
-        static float Move_speed;
-        static int Gold;
-
+        static float move_speed;
         Vector2D pos;
         Vector2D speed;
         float radius;
@@ -161,4 +159,3 @@ class InvisiblePotionChicken : public Potion{
     public:
 };
 */
-
