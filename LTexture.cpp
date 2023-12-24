@@ -97,3 +97,36 @@ float LTexture::getHeight(){
 float LTexture::getWidth(){
 	return mWidth;
 }
+
+bool LTexture::loadFromRenderedText(string text, SDL_Color textColor, SDL_Renderer* renderer, TTF_Font* font)
+{
+    //Get rid of preexisting texture
+    free();
+    //check if the font is loaded
+    if(font == NULL){
+        cout << "Failed to load font! SDL_ttf Error: " << TTF_GetError() << '\n';
+    }
+
+    //Render text surface
+    SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font, text.c_str() , textColor);
+    if(textSurface == NULL){
+        cout << "Unable to render text surface! SDL_ttf Error: " << TTF_GetError() << '\n';
+    }
+    else{
+        //Create texture from surface pixels
+    	mTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        if(mTexture == NULL){
+            cout << "Unable to create texture from rendered text! SDL Error: " << SDL_GetError() << '\n';
+        }
+        else{
+            //Get image dimensions
+            mWidth = textSurface->w;
+            mHeight = textSurface->h;
+        }
+        //Get rid of old surface
+        SDL_FreeSurface(textSurface);
+    }
+    this->setBlendMode( SDL_BLENDMODE_BLEND );
+    //Return success
+    return mTexture != NULL;
+}

@@ -14,11 +14,9 @@ class Chicken{
         int max_hp, current_hp;
         int gold_cost;
 
-        //Modified-----------------------------------------------
         static float Move_speed;
         static int Produce_speed;
         static int Production;
-        //Modified-----------------------------------------------
 
         Vector2D pos;
         Vector2D speed;
@@ -27,30 +25,22 @@ class Chicken{
         bool is_alive;
         bool is_freeze;
 
-        float size_radius;
-        
-		
-        
-
     public:
 
         Chicken();
-        Chicken(int _max_hp, int _current_hp, int _gold_cost, Vector2D &v, float r, float _size);
+        Chicken(int _max_hp, int _gold_cost, Vector2D &v, float r);
 
-        void adjust_hp(int);
+        bool adjust_hp(int);
         void Moving_Chicken();
         void freeze_chicken();
         void modify_speed(int);
         Vector2D get_pos();
-        int get_hp();
         float get_radius();
-
-        //Modified-----------------------------------------------
-        int get_Produce_speed();
+        
+		int get_Produce_speed();
         int get_Production();
         void adjust_Produce_speed();
         void adjust_Production();
-        //Modified-----------------------------------------------
 };
 
 //================================================ Second level ====================================================
@@ -62,7 +52,7 @@ class GoldProduction: public Chicken{
         
     public:
         //GoldProduction();
-        GoldProduction(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r, float _size); // setup level
+        GoldProduction(int _level, int _max_hp, int _gold_cost, Vector2D _pos, float _r); // setup level
         //GoldProduction(int [], double []);
         //GoldProduction(int, int [], double []);
 
@@ -75,7 +65,7 @@ class SpeedBoost: public Chicken{
         int speed_level;
     public:
         //SpeedBoost();
-        SpeedBoost(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r, float _size); // setup level
+        SpeedBoost(int _level, int _max_hp, int _gold_cost, Vector2D _pos, float _r); // setup level
         //SpeedBoost(double []);
         //SpeedBoost(int, double []);
 };
@@ -87,42 +77,15 @@ class Burning : public Chicken{
         int damage[Max_Level + 1];
     public:
         //Burning();
-        Burning(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r, float _size); //setup level
+        Burning(int _level, int _max_hp, int _gold_cost, Vector2D _pos, float _r); //setup level
 };
-
-/*
-class Shield : public Chicken{
-    private:
-        int shield_field[Max_Level][2 * Max_Radius - 1][2 * Max_Radius - 1];
-        int shield_level;
-    public:
-        Shield();
-};
-
-class Potion : public Chicken{
-    private:
-        double cooldown[Max_Level + 1];
-        int potion_level;
-    public:
-        Potion();
-};
-
-class Heal : public Chicken{
-    private:
-        double cooldown[Max_Level + 1];
-        double heal_field[2 * Max_Radius - 1][2 * Max_Radius - 1];
-        int heal_level;
-    public:
-};
-
-*/
 //================================================ Third level ====================================================
 class GoldChicken : public GoldProduction{
     private:
         
     public:
         //GoldChicken();
-        GoldChicken(int _level, Vector2D _pos);
+        GoldChicken(int _level, int _max_hp, int _gold_cost, Vector2D _pos, float _r);
         
 };
 /*
@@ -137,7 +100,7 @@ class EletricityChicken : public SpeedBoost{
         
     public:
         //EletricityChicken();
-        EletricityChicken(int _level, Vector2D _pos);
+        EletricityChicken(int _level, int _max_hp, int _gold_cost, Vector2D _pos, float _r);
         
 };
 
@@ -146,35 +109,6 @@ class BurningChicken : public Burning, public SpeedBoost{
         
     public:
         //BurningChicken();
-        BurningChicken(int spd_level, int burn, Vector2D _pos);
+        BurningChicken(int _level, int _max_hp, int _gold_cost, Vector2D _pos, float _r);
 
 };
-/*
-class SuperBurningChicken : public Burning, public GoldProduction, public SpeedBoost{
-    private:
-        
-    public:
-        SuperBurningChicken();
-};
-*/
-/*
-class HealerChicken : public Heal{
-    private:
-
-    public:
-};
-
-class HealPotionChicken : public Potion {
-    private:
-        double heal_level[Max_Level];
-    public:
-
-};
-
-class InvisiblePotionChicken : public Potion{
-    private:
-        double invisivble_time[Max_Level];
-    public:
-};
-*/
-

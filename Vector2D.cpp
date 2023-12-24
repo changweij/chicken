@@ -22,7 +22,7 @@ Vector2D operator+(const Vector2D &v1, const Vector2D &v2){
 }
 
 float operator-(const Vector2D &v1, const Vector2D &v2){
-	return abs((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y));
+	return sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y));
 }
 
 Vector2D get_mag_of(float x){

@@ -8,6 +8,7 @@ class Enemy{
 		~Enemy(); 
 		Vector2D get_pos();
 		int get_dmg();
+		int get_id();
 		bool isDead(int cur_time);
 		void move();
 		float get_radius();

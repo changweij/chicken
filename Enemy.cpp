@@ -26,10 +26,13 @@ int Enemy::get_dmg(){
 	return dmg;
 }
 
+int Enemy::get_id(){
+	return id;
+}
 void Enemy::move(){
 	pos += speed;
 	//check border
-	float border_x = 640, border_y = 480;
+	float border_x = 1200, border_y = 640;
 	if(pos.x - radius < 0){
 		pos.x += (radius - pos.x) * 2; 
 		speed.x *= -1;
