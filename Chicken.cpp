@@ -12,7 +12,9 @@ extern const int default_infinity_time;
 
 // Constructor
 
-float Chicken::move_speed = 0.0;
+float Chicken::Move_speed = 0.0;
+int Chicken::Gold = 0;
+
 Chicken::Chicken(){
     max_hp = 0;
     current_hp = 0;
@@ -66,6 +68,22 @@ void Chicken::Moving_Chicken(){
 		pos.y -= (radius - border_y + pos.x) * 2;
 	}
 }
+void Chicken::modify_speed(int _dir){
+    switch(_dir){
+        case 0: // up
+            speed.x = Move_speed; 
+            break;
+        case 1: // right
+            speed.y = Move_speed;
+            break;
+        case 2: //down
+            speed.x = -Move_speed;
+            break;
+        case 3: //left
+            speed.x = -Move_speed;
+            break;
+    }
+}
 
 
 Vector2D Chicken::get_pos(){
@@ -97,9 +115,11 @@ GoldProduction::GoldProduction(){
 
 }
 */
-GoldProduction::GoldProduction(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r){
+GoldProduction::GoldProduction(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r):
+    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r)
+{
     //init gold / cooldown / level = 0
-    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r);
+    
     production_level = _level;
     
     current_production[0] = 0;
@@ -150,9 +170,11 @@ SpeedBoost::SpeedBoost(){
     }
 }
 */
-SpeedBoost::SpeedBoost(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r){
+SpeedBoost::SpeedBoost(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r):
+    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r)
+{
 
-    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r);
+    
     speed_level = _level;
     move_speed_boost[0] = 0;
     move_speed_boost[1] = 0.1;
@@ -182,9 +204,11 @@ SpeedBoost::SpeedBoost(int _level, double _move_speed_boost[]){
 */
 //Burning
 
-Burning::Burning(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r){
+Burning::Burning(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r):
+    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r)
+{
 
-    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r);
+    
     burn_level = _level;
     damage[0] = 0;
     damage[1] = 1;

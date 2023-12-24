@@ -6,10 +6,13 @@
 
 //================================================ Base Chicken ====================================================
 class Chicken{
-    private:
+    protected:
         int max_hp, current_hp;
         int gold_cost;
-        static float move_speed;
+
+        static float Move_speed;
+        static int Gold;
+
         Vector2D pos;
         Vector2D speed;
         float radius;
@@ -28,6 +31,7 @@ class Chicken{
         void adjust_hp(int);
         void Moving_Chicken();
         void freeze_chicken();
+        void modify_speed(int);
         Vector2D get_pos();
         
 
