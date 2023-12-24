@@ -5,8 +5,11 @@
 //================================================ Base Chicken ====================================================
 
 //Chicken
+//Modified-----------------------------------------------
 float Chicken::Move_speed = 1.0;
-int Chicken::Gold = 0;
+int Chicken::Produce_speed = 10;
+int Chicken::Production = 1;
+//Modified-----------------------------------------------
 
 // Constructor
 Chicken::Chicken(){
@@ -46,9 +49,10 @@ void Chicken::adjust_hp(int _adjustment){
 }
 void Chicken::Moving_Chicken(){
 	pos += speed;
+
+    float border_x = 640, border_y = 480;
 	
 	//check border
-	float border_x = 640, border_y = 480;
 	if(pos.x - radius < 0){
 		pos.x += (radius - pos.x) * 2; 
 	}
@@ -89,10 +93,28 @@ Vector2D Chicken::get_pos(){
 float Chicken::get_radius(){
     return radius;
 }
-
+int Chicken::get_hp(){
+    return current_hp;
+}
 void Chicken::freeze_chicken(){
     is_freeze = 1;
 }
+
+//Modified-----------------------------------------------
+int Chicken::get_Produce_speed(){
+    return Produce_speed;
+}
+int Chicken::get_Production(){
+    return Production;
+}
+void Chicken::adjust_Produce_speed(){
+
+}
+void Chicken::adjust_Production(){
+
+}
+//Modified-----------------------------------------------
+
 
 
 //================================================ Second level ====================================================

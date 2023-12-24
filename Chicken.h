@@ -14,8 +14,11 @@ class Chicken{
         int max_hp, current_hp;
         int gold_cost;
 
+        //Modified-----------------------------------------------
         static float Move_speed;
-        static int Gold;
+        static int Produce_speed;
+        static int Production;
+        //Modified-----------------------------------------------
 
         Vector2D pos;
         Vector2D speed;
@@ -39,9 +42,15 @@ class Chicken{
         void freeze_chicken();
         void modify_speed(int);
         Vector2D get_pos();
+        int get_hp();
         float get_radius();
-        
 
+        //Modified-----------------------------------------------
+        int get_Produce_speed();
+        int get_Production();
+        void adjust_Produce_speed();
+        void adjust_Production();
+        //Modified-----------------------------------------------
 };
 
 //================================================ Second level ====================================================
@@ -168,3 +177,4 @@ class InvisiblePotionChicken : public Potion{
     public:
 };
 */
+
