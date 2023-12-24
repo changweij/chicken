@@ -7,8 +7,14 @@ struct Chicken_Property{
     int max_hp;
     int gold_cost;
     float radius;
+
+    Chicken_Property(int hp, int cost, float r) : max_hp(hp), gold_cost(cost), radius(r) {}
 };
 
+Chicken_Property GoldC           (20, 5 , 10.0);
+Chicken_Property EletricityC     (10, 10, 10.0);
+Chicken_Property BurningC        (20, 20, 10.0);
+/*
 Chicken_Property GoldC;
 GoldC.max_hp = 20;
 GoldC.gold_cost = 5;
@@ -27,7 +33,7 @@ Chicken_Property BurningC;
 BurningC.max_hp = 20;
 BurningC.gold_cost = 20;
 BurningC.radius = 10.0;
-
+*/
 
 
 
