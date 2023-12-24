@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <ctime>
 
 #include "LTexture.h"
 #include "Enemy.h"
@@ -13,6 +14,8 @@
 #include "fundamental.h"
 #include "DoublyLinkedList.h"
 using namespace std;
+
+extern const int EnemyCategories;
 
 bool init(){
 	//Initialize SDL
@@ -38,13 +41,34 @@ bool init(){
 	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0){
 	    cout << "SDL_mixer Error: " << Mix_GetError() << '\n';
 	}
+	
 }
 
 bool SDL_init = init();
 SDL_Window* window;
 SDL_Renderer* renderer;
+float curX = border_x / 2, curY = border_y / 2;
 
+TTF_Font* font32 = TTF_OpenFont("font/consola.ttf", 32);
+TTF_Font* font48 = TTF_OpenFont("font/consola.ttf", 48);
+TTF_Font* font24 = TTF_OpenFont("font/consola.ttf", 24);
+
+
+LTexture G_Chicken[2], E_Chicken[2], B_Chicken[2];
+LTexture Enemy[EnemyCategories];
+GoldChicken player = GoldChicken(1, Vector2D(border_x / 2, border_y / 2));
 //========================================initializing part ended==================================================
+void setTexture(){
+	G_Chicken[0].loadFromFile("img/GoldC.png", renderer);
+	G_Chicken[1].loadFromFile("img/GoldC2.png", renderer);
+	E_Chicken[0].loadFromFile("img/ElectricityC.png", renderer);
+	E_Chicken[1].loadFromFile("img/ElectricityC2.png", renderer);
+	B_Chicken[0].loadFromFile("img/BurningC.png", renderer);
+	B_Chicken[1].loadFromFile("img/BurningC2.png", renderer);
+	Enemy[0].loadFromFile("img/Calculus.png", renderer);
+	Enemy[1].loadFromFile("img/KFire.png", renderer);
+}
+//=======================================Texture Setting part ended====================================================
 Node *head = new Node, *tail = new Node;
 
 void move(){
@@ -55,13 +79,31 @@ void move(){
 		e.move();
 		now = now->next;
 	}
-	
+	//move chicken
+	player.Moving_Chicken();
 }
 
 //===========================================moving part ended====================================================
+const int generateSpeed = 5;
 
 void generateEnemy(){
-	
+	srand(time(NULL));
+	int kind;
+	for(int i = 0; i < generateSpeed; i++){
+		bool flag = flag;
+		float px, py;
+//		while(!flag){
+			px = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/border_x));
+			py = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/border_y));
+			
+//			if(fabs(px - curX) >= window_x / 2 && fabs(py - curY) >= window_y) flag = true;
+//		}
+//		cout << px << ' ' << py << '\n';
+		// generate different kinds of enemy, using enum, calling constructers
+//		kind = rand() % EnemyCategories;
+//		Node *nd = new Node(Calculus(Vector2D(px, py), dmg, SDL_getTicks, lasting_time, s, r));
+//		insert(tail, nd);
+	}
 }
 
 //=========================================Enemy generating part ended=============================================
@@ -94,20 +136,20 @@ void game(){
 	                break;
 	            case SDL_KEYDOWN:	
 	                if(event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_UP){
-						//set chicken v
-						cout << "detected\n";
+						player.modify_speed(0);
+						cout << "UP\n";
 					}
 					else if(event.key.keysym.sym == SDLK_a || event.key.keysym.sym == SDLK_LEFT){
-						//set chicken v
-						cout << "detected\n";
+						player.modify_speed(1);
+						cout << "LEFT\n";
 					}
 					else if(event.key.keysym.sym == SDLK_s || event.key.keysym.sym == SDLK_DOWN){
-						//set chicken v
-						cout << "detected\n";
+						player.modify_speed(2);
+						cout << "DOWN\n";
 					}
 					else if(event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_RIGHT){
-						//set chicken v
-						cout << "detected\n";
+						player.modify_speed(3);
+						cout << "RIGHT\n";
 					}
 					else continue;
 	            default:
@@ -144,6 +186,7 @@ int main(int argc, char *argv[]){
 		if(renderer == NULL){
 			cout << "Renderer could not be created! SDL_Error: " << SDL_GetError() << '\n';
 		}else{
+			setTexture();
 			game();
 		}
 		SDL_DestroyRenderer(renderer);
