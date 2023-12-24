@@ -4,7 +4,7 @@ struct Node{
 	Enemy val;
 	Node *prev, *next;
 	Node(): val(), prev(NULL), next(NULL){}
-	Node(Enemy &e): val(e), prev(NULL), next(NULL){}
+	Node(Enemy e): val(e), prev(NULL), next(NULL){}
 };
 
 void del(Node *n){

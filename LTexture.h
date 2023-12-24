@@ -11,16 +11,17 @@ class LTexture{
 		//Deallocates texture
 		void free();
 		//Loads image at the specified path
-		bool loadFromFile(string path , SDL_Renderer*);
+		bool loadFromFile(string path, SDL_Renderer*);
 		//Set color modulation
 		void setColor(Uint8 red, Uint8 green, Uint8 blue);
 		//Set blending
-		void setBlendMode( SDL_BlendMode blending );
+		void setBlendMode(SDL_BlendMode blending);
 		//Set alpha modulation
-		void setAlpha( Uint8 alpha );
+		void setAlpha(Uint8 alpha);
 		//Renders texture at the given point
 		void render(float x, float y, SDL_Renderer*);
 		void render(float x, float y, float w, float h, SDL_Renderer*);
+		void render(SDL_FRect* dstrect, SDL_Rect* srcrect, SDL_Renderer* renderer);
 		//Load Texture from text
 		bool loadFromRenderedText(string text, SDL_Color, SDL_Renderer*, TTF_Font*);
 		//Render center-aligned text
@@ -29,8 +30,6 @@ class LTexture{
 		//Gets image dimensions
 		float getWidth();
 		float getHeight();
-		//set mHeight and mWidth
-		void setdim(float w, float h);
 		
 	protected:
 		//The actual hardware texture

@@ -8,6 +8,7 @@
 #include <cmath>
 #include <ctime>
 
+#include "Vector2D.h"
 #include "LTexture.h"
 #include "Enemy.h"
 #include "Chicken.h"
@@ -16,6 +17,10 @@
 using namespace std;
 
 extern const int EnemyCategories;
+extern Chicken_Property GoldC;
+extern Chicken_Property EletricityC;
+extern Chicken_Property BurningC;
+extern Enemy_Property Cal;
 
 bool init(){
 	//Initialize SDL
@@ -75,8 +80,7 @@ void move(){
 	//move Enemy 
 	Node *now = head->next;
 	while(now != tail){
-		Enemy &e = now->val;
-		e.move();
+		now->val.move();
 		now = now->next;
 	}
 	//move chicken
@@ -93,37 +97,35 @@ void generateEnemy(){
 		bool flag = flag;
 		float px, py;
 //		while(!flag){
-			px = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/border_x));
-			py = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/border_y));
+		px = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/border_x));
+		py = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/border_y));
 			
 //			if(fabs(px - curX) >= window_x / 2 && fabs(py - curY) >= window_y) flag = true;
 //		}
 //		cout << px << ' ' << py << '\n';
 		// generate different kinds of enemy, using enum, calling constructers
 //		kind = rand() % EnemyCategories;
-//		Node *nd = new Node(Calculus(Vector2D(px, py), dmg, SDL_getTicks, lasting_time, s, r));
-//		insert(tail, nd);
+		Vector2D pos(px, py), v = get_mag_of(Cal.v);
+		Node *nd = new Node(Calculus(pos, Cal.dmg, SDL_GetTicks(), Cal.lasting_time, v, Cal.r, 0));
+		insert(tail, nd);
 	}
 }
 
 //=========================================Enemy generating part ended=============================================
 
 void render_all(){
-    Vector2D render_pos;
+	Vector2D render_pos;
 
     Node *now = head->next;
 	while(now != tail){
-		Enemy &e = now->val;
-        
+		class Enemy e = now->val;
         render_pos = e.get_pos();
-		Enemy[0].render(render_pos.x Enemy[0].getWidth() / 2, render_pos.y - Enemy[0].GChicken.getHeight() / 2, renderer);
+		Enemy[0].render(render_pos.x - Enemy[0].getWidth() / 2, render_pos.y - Enemy[0].getHeight() / 2, renderer);
 
 		now = now->next;
 	}
-    
     render_pos = player.get_pos();
-    GChicken[0].render(render_pos.x - GChicken.getWidth() / 2, render_pos.y - GChicken.getHeight() / 2, renderer);
-	
+    G_Chicken[0].render(render_pos.x - G_Chicken[0].getWidth() / 2, render_pos.y - G_Chicken[0].getHeight() / 2, renderer);
 }
 
 //==============================================rendering part ended===============================================

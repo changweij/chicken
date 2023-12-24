@@ -1,44 +1,31 @@
-const double dt = 0.01;
-const int default_infinity_time = 10000;
-const float border_x = 1000;
-const float border_y = 1000;
+#pragma once
+float border_x = 640;
+float border_y = 480;
+
+float window_x = 640;
+float window_y = 480;
+
+float default_infinity_time = 10000.0; 
+const int EnemyCategories = 2;
 
 struct Chicken_Property{
     int max_hp;
     int gold_cost;
     float radius;
-
-    Chicken_Property(int hp, int cost, float r) : max_hp(hp), gold_cost(cost), radius(r) {}
+    Chicken_Property(int hp, int cost, float r): max_hp(hp), gold_cost(cost), radius(r){}
 };
 
-Chicken_Property GoldC           (20, 5 , 10.0);
-Chicken_Property EletricityC     (10, 10, 10.0);
-Chicken_Property BurningC        (20, 20, 10.0);
-/*
-Chicken_Property GoldC;
-GoldC.max_hp = 20;
-GoldC.gold_cost = 5;
-GoldC.radius = 10.0;
-
-
-
-Chicken_Property EletricityC;
-EletricityC.max_hp = 10;
-EletricityC.gold_cost = 10;
-EletricityC.radius = 10.0;
-
-
-
-Chicken_Property BurningC;
-BurningC.max_hp = 20;
-BurningC.gold_cost = 20;
-BurningC.radius = 10.0;
-*/
-
-
+Chicken_Property GoldC(20, 5, 10.0);
+Chicken_Property EletricityC(10, 10, 10.0);
+Chicken_Property BurningC(20, 20, 10.0);
 
 struct Enemy_Property{
-
-
+	int dmg, lasting_time;
+	float v;
+	float r;
+	Enemy_Property(int dmg, int lasting_time, float v, float r): dmg(dmg), lasting_time(lasting_time), v(v), r(r){}
 };
+
+Enemy_Property Cal(2, 10, 1.0, 10.0);
+
 

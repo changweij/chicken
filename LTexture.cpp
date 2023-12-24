@@ -43,7 +43,7 @@ bool LTexture::loadFromFile(string path, SDL_Renderer* renderer){
 		*/
 
 		//Create texture from surface pixels
-   		newTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
+   		newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
 		if(newTexture == NULL){
 			cout << "Unable to create texture from" << path.c_str() << " SDL Error: " << SDL_GetError() << '\n';
 		}
@@ -71,7 +71,12 @@ void LTexture::render(float x, float y, float w, float h, SDL_Renderer* renderer
 	//Set rendering space and render to screen
 	SDL_FRect target = {x, y, w, h};
 	//Render to screen
-	SDL_RenderCopyF( renderer, mTexture, NULL, &target);
+	SDL_RenderCopyF(renderer, mTexture, NULL, &target);
+}
+
+void LTexture::render(SDL_FRect* dstrect, SDL_Rect* srcrect, SDL_Renderer* renderer){
+	//Render to screen
+	SDL_RenderCopyF(renderer, mTexture, srcrect, dstrect);
 }
 
 void LTexture::setAlpha(Uint8 alpha){
@@ -83,4 +88,12 @@ void LTexture::setAlpha(Uint8 alpha){
 void LTexture::setBlendMode(SDL_BlendMode blending){
 	//Set blending function
 	SDL_SetTextureBlendMode(mTexture, blending);
+}
+
+float LTexture::getHeight(){
+	return mHeight;
+}
+
+float LTexture::getWidth(){
+	return mWidth;
 }
