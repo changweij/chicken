@@ -109,6 +109,20 @@ void generateEnemy(){
 //=========================================Enemy generating part ended=============================================
 
 void render_all(){
+    Vector2D render_pos;
+
+    Node *now = head->next;
+	while(now != tail){
+		Enemy &e = now->val;
+        
+        render_pos = e.get_pos();
+		Enemy[0].render(render_pos.x Enemy[0].getWidth() / 2, render_pos.y - Enemy[0].GChicken.getHeight() / 2, renderer);
+
+		now = now->next;
+	}
+    
+    render_pos = player.get_pos();
+    GChicken[0].render(render_pos.x - GChicken.getWidth() / 2, render_pos.y - GChicken.getHeight() / 2, renderer);
 	
 }
 
