@@ -1,3 +1,4 @@
+#include "Vector2D.h"
 #define Max_Level 5
 #define Max_Radius 5
 
@@ -8,22 +9,27 @@ class Chicken{
     private:
         int max_hp, current_hp;
         int gold_cost;
-        static double move_speed;
-        double pos_x, pos_y;
+        static float move_speed;
+        Vector2D pos;
+        Vector2D speed;
+        float radius;
+
         bool is_alive;
         bool is_freeze;
+        
+		
         
 
     public:
 
         Chicken();
-        Chicken(int, int, int, double, double);
+        Chicken(int _max_hp, int _current_hp, int _gold_cost, Vector2D &v, float r);
 
         void adjust_hp(int);
-        void move(int);
+        void Moving_Chicken();
         void freeze_chicken();
-        double GetPos_x();
-        double GetPos_y();
+        Vector2D get_pos();
+        
 
 };
 
@@ -36,7 +42,7 @@ class GoldProduction: public Chicken{
         
     public:
         //GoldProduction();
-        GoldProduction(int, int, int, int, double, double); // setup level
+        GoldProduction(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r); // setup level
         //GoldProduction(int [], double []);
         //GoldProduction(int, int [], double []);
 
@@ -49,7 +55,7 @@ class SpeedBoost: public Chicken{
         int speed_level;
     public:
         //SpeedBoost();
-        SpeedBoost(int, int, int, int, double, double); // setup level
+        SpeedBoost(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r); // setup level
         //SpeedBoost(double []);
         //SpeedBoost(int, double []);
 };
@@ -61,7 +67,7 @@ class Burning : public Chicken{
         int damage[Max_Level];
     public:
         //Burning();
-        Burning(int, int, int, int, double, double); //setup level
+        Burning(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r); //setup level
 };
 
 /*
@@ -96,7 +102,7 @@ class GoldChicken : public GoldProduction{
         
     public:
         //GoldChicken();
-        GoldChicken(int, double, double);
+        GoldChicken(int _level, Vector2D _pos);
         
 };
 /*
@@ -111,7 +117,7 @@ class EletricityChicken : public SpeedBoost{
         
     public:
         //EletricityChicken();
-        EletricityChicken(int, double, double);
+        EletricityChicken(int _level, Vector2D _pos);
         
 };
 
@@ -120,7 +126,7 @@ class BurningChicken : public Burning, public SpeedBoost{
         
     public:
         //BurningChicken();
-        BurningChicken(int spd_level, int burn, double, double);
+        BurningChicken(int spd_level, int burn, Vector2D _pos);
 
 };
 /*

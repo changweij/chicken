@@ -1,7 +1,8 @@
 #include "Chicken.h"
 #include "fundamental.h"
 
-
+extern const float border_x;
+extern const float border_y;
 extern const double dt;
 extern const int default_infinity_time;
 //================================================ Base Chicken ====================================================
@@ -11,22 +12,25 @@ extern const int default_infinity_time;
 
 // Constructor
 
-double Chicken::move_speed = 0.0;
+float Chicken::move_speed = 0.0;
 Chicken::Chicken(){
     max_hp = 0;
     current_hp = 0;
-    pos_x = 0; pos_y = 0;
+    
     is_alive = 0;
     is_freeze = 0;
 }
-Chicken::Chicken(int _max_hp, int _current_hp, int _gold_cost, double _pos_x, double _pos_y){
+Chicken::Chicken(int _max_hp, int _current_hp, int _gold_cost, Vector2D &v, float r){
     max_hp = _max_hp;
     current_hp = _current_hp;
     gold_cost = _gold_cost;
-    pos_x = _pos_x; pos_y = _pos_y;
+    pos = v;
+    radius = r;
     is_alive = 1;
     is_freeze = 0;
 }
+
+
 
 
 // Functions
@@ -44,28 +48,28 @@ void Chicken::adjust_hp(int _adjustment){
 
 
 
-void Chicken::move(int _direction){
-    //TODO enum direction
-    switch(_direction){
-        case 1:
-            pos_x += move_speed * dt;
-            break;
-        case 2:
-            pos_y += move_speed * dt;
-            break;
-        case 3:
-            pos_x -= move_speed * dt;
-            break;
-        case 4:
-            pos_y -= move_speed * dt;
-            break;
-    }
+
+void Chicken::Moving_Chicken(){
+	pos += speed;
+	
+	//check border
+	if(pos.x - radius < 0){
+		pos.x += (radius - pos.x) * 2; 
+	}
+	else if(pos.x + radius > border_x){
+		pos.x -= (radius - border_x + pos.x) * 2;
+	}
+	if(pos.y - radius < 0){
+		pos.y += (radius - pos.y) * 2; 
+	}
+	else if(pos.y + radius > border_y){
+		pos.y -= (radius - border_y + pos.x) * 2;
+	}
 }
-double Chicken::GetPos_x(){
-    return pos_x;
-}
-double Chicken::GetPos_y(){
-    return pos_y;
+
+
+Vector2D Chicken::get_pos(){
+    return pos;
 }
 
 void Chicken::freeze_chicken(){
@@ -93,9 +97,9 @@ GoldProduction::GoldProduction(){
 
 }
 */
-GoldProduction::GoldProduction(int _level, int _max_hp, int _current_hp, int _gold_cost, double _pos_x, double _pos_y){
+GoldProduction::GoldProduction(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r){
     //init gold / cooldown / level = 0
-    Chicken(_max_hp, _current_hp, _gold_cost, _pos_x, _pos_y);
+    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r);
     production_level = _level;
     
     current_production[0] = 0;
@@ -146,9 +150,9 @@ SpeedBoost::SpeedBoost(){
     }
 }
 */
-SpeedBoost::SpeedBoost(int _level, int _max_hp, int _current_hp, int _gold_cost, double _pos_x, double _pos_y){
+SpeedBoost::SpeedBoost(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r){
 
-    Chicken(_max_hp, _current_hp, _gold_cost, _pos_x, _pos_y);
+    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r);
     speed_level = _level;
     move_speed_boost[0] = 0;
     move_speed_boost[1] = 0.1;
@@ -178,9 +182,9 @@ SpeedBoost::SpeedBoost(int _level, double _move_speed_boost[]){
 */
 //Burning
 
-Burning::Burning(int _level, int _max_hp, int _current_hp, int _gold_cost, double _pos_x, double _pos_y){
+Burning::Burning(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r){
 
-    Chicken(_max_hp, _current_hp, _gold_cost, _pos_x, _pos_y);
+    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r);
     burn_level = _level;
     damage[0] = 0;
     damage[1] = 1;
@@ -221,16 +225,20 @@ GoldChicken::GoldChicken() : GoldProduction(0){
 }
 */
 
-GoldChicken::GoldChicken(int _level, double x, double y){
-    GoldProduction(_level, 10, 10, 5, x, y); // max_hp/current_hp : 10     gold_cost : 5
+GoldChicken::GoldChicken(int _level, Vector2D _pos):
+    GoldProduction(_level, 10, 10, 5, _pos, 10);
+{
+     // max_hp/current_hp : 10     gold_cost : 5  radius = 10;
 }
 
 
 //EletricityChicken
 
 
-EletricityChicken::EletricityChicken(int _level, double x, double y){
-    SpeedBoost(_level, 10, 10, 10, x, y);
+EletricityChicken::EletricityChicken(int _level, Vector2D _pos):
+    SpeedBoost(_level, 10, 10, 10, _pos, 10)
+{
+    ;
     //TODO : setup speed boost
     /*
     move_speed_boost[0] = 0;
@@ -246,10 +254,9 @@ EletricityChicken::EletricityChicken(int _level, double x, double y){
 
 //BurningChicken
 
-BurningChicken::BurningChicken(int spd_level, int burn_level, double x, double y){
-    SpeedBoost(spd_level, 20, 20, 20, x, y);
-    Burning(burn_level, 20, 20, 20, x, y);
-
+BurningChicken::BurningChicken(int spd_level, int burn_level, Vector2D _pos):
+    SpeedBoost(spd_level, 20, 20, 20, _pos, 10), Burning(burn_level, 20, 20, 20, _pos, 10)
+{
     //TODO : setup speed boost
 }
     
