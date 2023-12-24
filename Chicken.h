@@ -95,16 +95,16 @@ class SuperGoldChicken : public GoldProduction{
     public:
 };
 */
-class EletricityChicken : public SpeedBoost{
+class ElectricityChicken : public SpeedBoost{
     private:
         
     public:
         //EletricityChicken();
-        EletricityChicken(int _level, int _max_hp, int _gold_cost, Vector2D _pos, float _r);
+        ElectricityChicken(int _level, int _max_hp, int _gold_cost, Vector2D _pos, float _r);
         
 };
 
-class BurningChicken : public Burning, public SpeedBoost{
+class BurningChicken : public Burning{
     private:
         
     public:

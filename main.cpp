@@ -82,6 +82,51 @@ struct Enemy_Property{
 
 Enemy_Property E_prop[EnemyCategories] = {Enemy_Property(2, 50000, 1.0, 30.0), Enemy_Property(2, 50000, 0, 30.0)}; 
 
+
+int dir_x[9] =       {0,  0, -1, -1,  1,  1,  0,  1, -1};
+int dir_y[9] =       {0, -1,  0, -1,  0, -1,  1,  1,  1};
+int id[9] = {};
+int chicken_cost[3];
+bool isalive[9] =    {1,  0,  0,  0,  0,  0,  0,  0,  0};
+Chicken Chickens[9];
+
+bool Summon_Chicken(int _kind){
+    
+    int index = 1;
+    if(Gold < chicken_cost[_kind]) return false;
+    for(int i = 1; i <= 8; i++){
+        if(isalive[i] == 0){
+            index = i;
+            isalive[i] = 1;
+            break;
+        } 
+        if(i == 8) return false; // isfull 
+    }
+    
+    Vector2D summon_pos(dir_x[index] * 60, dir_y[index] * 60);
+    summon_pos += player.get_pos();
+
+    switch(_kind){
+        case 0: //GoldChicken
+            Chickens[index] = GoldChicken(1, GoldC.max_hp, GoldC.gold_cost, summon_pos, GoldC.r);
+            id[index] = 0;
+            break;
+        case 1: //ElectricityChicken
+            Chickens[index] = ElectricityChicken(1, EletricityC.max_hp, EletricityC.gold_cost, summon_pos, EletricityC.r);
+            id[index] = 1;
+            break;
+        case 2: //BurningChicken
+            Chickens[index] = BurningChicken(1, BurningC.max_hp, BurningC.gold_cost, summon_pos, BurningC.r);
+            id[index] = 2;
+            break;    
+    }
+    return true;
+}
+
+
+
+
+
 //=========================================these are fundamentals=============================================
 bool SDL_init = init();
 bool gameRunning = true;
@@ -168,7 +213,7 @@ void generateEnemy(){
 	}
 }
 
-//=========================================Enemy generating part ended=============================================
+//==============================================Action part ended==================================================
 int walk;
 
 void render_all(){

@@ -180,7 +180,7 @@ GoldChicken::GoldChicken(int _level, int _max_hp, int _gold_cost, Vector2D _pos,
 //EletricityChicken
 
 
-EletricityChicken::EletricityChicken(int _level, int _max_hp, int _gold_cost, Vector2D _pos, float _r):
+ElectricityChicken::ElectricityChicken(int _level, int _max_hp, int _gold_cost, Vector2D _pos, float _r):
     SpeedBoost(_level, _max_hp, _gold_cost, _pos, _r)
 {
 
@@ -189,9 +189,8 @@ EletricityChicken::EletricityChicken(int _level, int _max_hp, int _gold_cost, Ve
 //BurningChicken
 
 BurningChicken::BurningChicken(int _level, int _max_hp, int _gold_cost, Vector2D _pos, float _r):
-    SpeedBoost(_level, _max_hp, _gold_cost, _pos, _r), 
     Burning(_level, _max_hp, _gold_cost, _pos, _r)
 {
     
 }
-    
+//SpeedBoost(_level, _max_hp, _gold_cost, _pos, _r), 
