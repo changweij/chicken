@@ -48,6 +48,7 @@ void Chicken::Moving_Chicken(){
 	pos += speed;
 	
 	//check border
+	float border_x = 640, border_y = 480;
 	if(pos.x - radius < 0){
 		pos.x += (radius - pos.x) * 2; 
 	}
