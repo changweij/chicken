@@ -1,7 +1,7 @@
 #pragma once
 #include "Chicken.h"
 #include "Vector2D.h"
-#include "fundamental.h"
+
 //================================================ Base Chicken ====================================================
 
 //Chicken
@@ -17,7 +17,7 @@ Chicken::Chicken(){
     is_freeze = 0;
 
 }
-Chicken::Chicken(int _max_hp, int _current_hp, int _gold_cost, Vector2D &v, float r){
+Chicken::Chicken(int _max_hp, int _current_hp, int _gold_cost, Vector2D &v, float r, float _size){
     max_hp = _max_hp;
     current_hp = _current_hp;
     gold_cost = _gold_cost;
@@ -25,6 +25,11 @@ Chicken::Chicken(int _max_hp, int _current_hp, int _gold_cost, Vector2D &v, floa
     radius = r;
     is_alive = 1;
     is_freeze = 0;
+
+
+    size_radius = _size;
+
+    
 }
 
 // Functions
@@ -80,6 +85,9 @@ void Chicken::modify_speed(int _dir){
 Vector2D Chicken::get_pos(){
     return pos;
 }
+float Chicken::get_radius(){
+    return radius;
+}
 
 void Chicken::freeze_chicken(){
     is_freeze = 1;
@@ -91,8 +99,8 @@ void Chicken::freeze_chicken(){
 
 //GoldProduction
 
-GoldProduction::GoldProduction(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r):
-    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r)
+GoldProduction::GoldProduction(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r, float _size):
+    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r, _size)
 {
 
     production_level = _level;
@@ -113,8 +121,8 @@ GoldProduction::GoldProduction(int _level, int _max_hp, int _current_hp, int _go
 
 }
 
-SpeedBoost::SpeedBoost(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r):
-    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r)
+SpeedBoost::SpeedBoost(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r, float _size):
+    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r, _size)
 {
 
     
@@ -129,8 +137,8 @@ SpeedBoost::SpeedBoost(int _level, int _max_hp, int _current_hp, int _gold_cost,
 }
 
 
-Burning::Burning(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r):
-    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r)
+Burning::Burning(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r, float _size):
+    Chicken(_max_hp, _current_hp, _gold_cost, _pos, _r, _size)
 {
 
     
@@ -150,7 +158,7 @@ Burning::Burning(int _level, int _max_hp, int _current_hp, int _gold_cost, Vecto
 
 
 GoldChicken::GoldChicken(int _level, Vector2D _pos):
-    GoldProduction(_level, GoldC.max_hp, GoldC.max_hp, GoldC.gold_cost, _pos, GoldC.radius)
+    GoldProduction(_level, 20, 20, 5, _pos, 10, 60)
 {
      // max_hp/current_hp : 20     gold_cost : 5  radius = 10;
 }
@@ -160,7 +168,7 @@ GoldChicken::GoldChicken(int _level, Vector2D _pos):
 
 
 EletricityChicken::EletricityChicken(int _level, Vector2D _pos):
-    SpeedBoost(_level, EletricityC.max_hp, EletricityC.max_hp, EletricityC.gold_cost, _pos, EletricityC.radius)
+    SpeedBoost(_level, 10, 10, 10, _pos, 10, 60)
 {
 
 }
@@ -168,8 +176,8 @@ EletricityChicken::EletricityChicken(int _level, Vector2D _pos):
 //BurningChicken
 
 BurningChicken::BurningChicken(int spd_level, int burn_level, Vector2D _pos):
-    SpeedBoost(spd_level, BurningC.max_hp, BurningC.max_hp, BurningC.gold_cost, _pos, BurningC.radius), 
-    Burning(burn_level, BurningC.max_hp, BurningC.max_hp, BurningC.gold_cost, _pos, BurningC.radius)
+    SpeedBoost(spd_level, 20, 20, 20, _pos, 10, 60), 
+    Burning(burn_level, 20, 20, 20, _pos, 10, 60)
 {
     
 }

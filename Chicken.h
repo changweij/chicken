@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector2D.h"
-#include "fundamental.h"
+
 #define Max_Level 5
 #define Max_Radius 5
 
@@ -23,6 +23,8 @@ class Chicken{
 
         bool is_alive;
         bool is_freeze;
+
+        float size_radius;
         
 		
         
@@ -30,13 +32,14 @@ class Chicken{
     public:
 
         Chicken();
-        Chicken(int _max_hp, int _current_hp, int _gold_cost, Vector2D &v, float r);
+        Chicken(int _max_hp, int _current_hp, int _gold_cost, Vector2D &v, float r, float _size);
 
         void adjust_hp(int);
         void Moving_Chicken();
         void freeze_chicken();
         void modify_speed(int);
         Vector2D get_pos();
+        float get_radius();
         
 
 };
@@ -50,7 +53,7 @@ class GoldProduction: public Chicken{
         
     public:
         //GoldProduction();
-        GoldProduction(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r); // setup level
+        GoldProduction(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r, float _size); // setup level
         //GoldProduction(int [], double []);
         //GoldProduction(int, int [], double []);
 
@@ -63,7 +66,7 @@ class SpeedBoost: public Chicken{
         int speed_level;
     public:
         //SpeedBoost();
-        SpeedBoost(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r); // setup level
+        SpeedBoost(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r, float _size); // setup level
         //SpeedBoost(double []);
         //SpeedBoost(int, double []);
 };
@@ -75,7 +78,7 @@ class Burning : public Chicken{
         int damage[Max_Level + 1];
     public:
         //Burning();
-        Burning(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r); //setup level
+        Burning(int _level, int _max_hp, int _current_hp, int _gold_cost, Vector2D _pos, float _r, float _size); //setup level
 };
 
 /*
